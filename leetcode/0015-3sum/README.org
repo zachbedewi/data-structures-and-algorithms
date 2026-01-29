@@ -1,12 +1,13 @@
 #+title: 15. 3Sum
+#+auto_tangle t
 
 * Problem Description
-  Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
+Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
 
 Notice that the solution set must not contain duplicate triplets.
 
 * Examples
-  Example 1:
+Example 1:
 
 Input: nums = [-1,0,1,2,-1,-4]
 Output: [[-1,-1,2],[-1,0,1]]
@@ -30,3 +31,43 @@ Explanation: The only possible triplet sums up to 0.
 * Solutions
 
 ** S01. Prefix and Suffix Arrays
+
+#+BEGIN_SRC c++ :tangle two-pointers.cpp
+class Solution {
+  public:
+      vector<vector<int>> threeSum(vector<int>& nums) {
+        ranges::sort(nums);
+
+        vector<vector<int>> result;
+
+        for (int i = 0; i < nums.size(); ++i) {
+          if (i > 0 && nums[i] == nums[i - 1]) {
+            continue;
+          }
+
+          int l = i + 1;
+          int r = nums.size() - 1;
+          while (l < r) {
+            const int sum = nums[i] + nums[l] + nums[r];
+
+            if (sum == 0) {
+              result.push_back({nums[i], nums[l], nums[r]});
+
+              while (l < r && nums[l] == nums[l - 1]) {
+                ++l;
+              }
+              while (l < r && nums[r] == nums[r + 1]) {
+                --r;
+              }
+            } else if (sum < 0) {
+              ++l;
+            } else {
+              --r;
+            }
+          }
+        }
+
+        return result;
+      }
+};
+#+END_SRC
