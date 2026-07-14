@@ -1,0 +1,59 @@
+#+title: 798. Smallest Rotation With Highest Score
+
+* Problem Description
+You are given an array nums. You can rotate it by a non-negative integer k so that the array becomes [nums[k], nums[k + 1], ... nums[nums.length - 1], nums[0], nums[1], ..., nums[k-1]]. Afterward, any entries that are less than or equal to their index are worth one point.
+
+    For example, if we have nums = [2,4,1,3,0], and we rotate by k = 2, it becomes [1,3,0,2,4]. This is worth 3 points because 1 > 0 [no points], 3 > 1 [no points], 0 <= 2 [one point], 2 <= 3 [one point], 4 <= 4 [one point].
+
+Return the rotation index k that corresponds to the highest score we can achieve if we rotated nums by it. If there are multiple answers, return the smallest such index k.
+
+* Examples 
+
+Example 1:
+
+Input: nums = [2,3,1,4,0]
+Output: 3
+Explanation: Scores for each k are listed below: 
+k = 0,  nums = [2,3,1,4,0],    score 2
+k = 1,  nums = [3,1,4,0,2],    score 3
+k = 2,  nums = [1,4,0,2,3],    score 3
+k = 3,  nums = [4,0,2,3,1],    score 4
+k = 4,  nums = [0,2,3,1,4],    score 3
+So we should choose k = 3, which has the highest score.
+
+Example 2:
+
+Input: nums = [1,3,0,2,4]
+Output: 0
+Explanation: nums will always have 3 points no matter how it shifts.
+So we will choose the smallest k, which is 0.
+
+ 
+
+* Constraints:
+
+    1 <= nums.length <= 105
+    0 <= nums[i] < nums.length
+
+* Notes
+Difference array = "many range updates, one final read."
+To add +x to every element in [l, r]:
+      diff[l]     += x
+      diff[r + 1] -= x
+  Then prefix-sum diff to materialize the actual values.
+  Cost: O(1) per update, O(n) once at the end — instead of O(r - l) per update.
+
+  Triggers:
+  
+  "Compute f(k) for every k = 0..n-1" (every rotation, every shift, every starting point, every threshold) and the naive way is O(n) per k. Ask: can I compute each element's contribution across all k's
+  instead?
+  - Each item affects a contiguous range of something. "This booking covers flights l..r", "this passenger rides from stop a to b", "person alive from year x to y", "this element scores for rotations in [l, r]".
+  Range of effect → difference array.
+  - All updates happen before any query. If you need to interleave updates and queries, you need a BIT/segment tree instead. Difference array only works when you can batch all updates, then read once.
+  - "Number of overlapping intervals at each point" — interval start is +1, interval end is -1; this is the sweep-line/event-count special case of the same idea.
+  - Circular/rotation structure — expect a wrap-around interval; handle it by splitting into two intervals (or conceptually doubling the array).
+  - Answer is argmax/argmin over all candidates with tie-breaking by smallest index — scan the prefix sum with strict >.
+
+* Solutions
+
+** S01. Math, Prefix Sum, Difference Array
