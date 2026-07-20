@@ -4,10 +4,6 @@ build-check/
 out/
 cmake-build-*/
 
-# Nix/direnv
-.direnv/
-result
-
 # CPM cache
 _deps/
 

@@ -1,0 +1,57 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "dev",
+      "displayName": "Development (fast)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "myproject_ENABLE_IPO": "OFF",
+        "myproject_ENABLE_CLANG_TIDY": "OFF",
+        "myproject_ENABLE_CPPCHECK": "OFF",
+        "myproject_ENABLE_SANITIZER_ADDRESS": "OFF",
+        "myproject_ENABLE_SANITIZER_UNDEFINED": "OFF"
+      }
+    },
+    {
+      "name": "check",
+      "displayName": "Full checks (sanitizers + static analysis)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-check",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "myproject_ENABLE_IPO": "OFF",
+        "myproject_ENABLE_CLANG_TIDY": "ON",
+        "myproject_ENABLE_CPPCHECK": "ON",
+        "myproject_ENABLE_SANITIZER_ADDRESS": "ON",
+        "myproject_ENABLE_SANITIZER_UNDEFINED": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "dev",
+      "configurePreset": "dev"
+    },
+    {
+      "name": "check",
+      "configurePreset": "check"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "dev",
+      "configurePreset": "dev",
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "check",
+      "configurePreset": "check",
+      "output": { "outputOnFailure": true }
+    }
+  ]
+}
