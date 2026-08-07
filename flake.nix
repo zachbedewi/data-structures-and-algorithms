@@ -18,6 +18,7 @@
         {
           default = pkgs.mkShell {
             packages = with pkgs; [
+              gcc
               # Build system
               cmake
               ninja
